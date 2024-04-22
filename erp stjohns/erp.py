@@ -35,28 +35,27 @@ time.sleep(5)
 search_button = wait.until(EC.element_to_be_clickable((By.ID, "mat-tab-link-8")))
 search_button.click()
 print("Clicked on 'Search' dropdown.")  # Debugging output
+# Find all elements with the class 'mat-menu-item'
+menu_items = driver.find_elements(By.CSS_SELECTOR, "button.mat-menu-item")
+# Iterate through found elements to click the one with the correct text
+for item in menu_items:
+    if "Regulatory Search" in item.text:
+        item.click()
+        break
 
-# Ensure the dropdown is fully visible
-dropdown_items_selector = ".mat-menu-content .mat-option"  # Update this with the actual selector
-wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, dropdown_items_selector)))
+time.sleep(15)
 
-# Click 'Regulatory Search' from the expanded dropdown
-try:
-    regulatory_search_option = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[.//span[contains(text(), 'Regulatory Search')]]")))
-    regulatory_search_option.click()
-    print("Clicked 'Regulatory Search'.")
-except Exception as e:
-    print(f"Failed to click on the option due to: {e}")
+# We assume the label 'Permit Type' is next to the dropdown we need to interact with
+# This might need adjustment based on the actual structure of your webpage
+permit_type_label = wait.until(EC.presence_of_element_located((By.XPATH, "//label[contains(text(), 'Permit Type')]")))
+parent_element = permit_type_label.find_element(By.XPATH, "..")  # Going to the parent element
+dropdown = parent_element.find_element(By.CSS_SELECTOR, "mat-select")  # Finding the dropdown within the parent
+dropdown.click()
 
+# Now, wait for the dropdown options to appear and be clickable
+environmental_permit_option = wait.until(EC.element_to_be_clickable((By.XPATH, "//mat-option/span[contains(text(), 'Environmental Resource Permit')]")))
+environmental_permit_option.click()
 
-#
-# # Click on the Permit Type dropdown to expand it
-# dropdown = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[aria-labelledby='mat-form-field-label-9']")))
-# dropdown.click()
-#
-# # Wait for the dropdown options to be visible
-# wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div.mat-select-panel")))
-#
 # # Scroll to and click on the desired option
 # desired_option = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.mat-select-min-line.ng-tns-c83-7.ng-star-inserted:contains('Environmental Resource Permitting')")))
 # actions = ActionChains(driver)
